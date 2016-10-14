@@ -1,8 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿/*
+ * Author:durow
+ * Date:2016.10.14
+ * Description:used to write data to bit stream.
+ */
+
+using System;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Ayx.BitIO
 {
@@ -10,57 +13,117 @@ namespace Ayx.BitIO
     {
         public readonly StringBuilder BinString;
 
+        /// <summary>
+        /// number of bit
+        /// </summary>
+        public int Length
+        {
+            get
+            {
+                return BinString.Length;
+            }
+        }
+
+        /// <summary>
+        /// create a BitWriter
+        /// </summary>
         public BitWriter()
         {
             BinString = new StringBuilder();
         }
 
+        /// <summary>
+        /// create a BitWriter
+        /// </summary>
+        /// <param name="bitLength">bit length</param>
         public BitWriter(int bitLength)
         {
             var add = 8 - bitLength % 8;
             BinString = new StringBuilder(bitLength + add);
         }
 
+        /// <summary>
+        /// write byte to bit stream
+        /// </summary>
+        /// <param name="b">byte value</param>
+        /// <param name="bitLength">length in the bit stream</param>
         public void WriteByte(byte b, int bitLength = 8)
         {
             var bin = Convert.ToString(b, 2);
             AppendBinString(bin, bitLength);
         }
 
-        public void WriteInt(int i, int bitLength)
+        /// <summary>
+        /// write int to bit stream
+        /// </summary>
+        /// <param name="i">int value</param>
+        /// <param name="bitLength">length in the bit stream</param>
+        public void WriteInt(int i, int bitLength = 16)
         {
             var bin = Convert.ToString(i, 2);
             AppendBinString(bin, bitLength);
         }
 
-        public void WriteChar7(char c)
+        /// <summary>
+        /// write char to bit stream
+        /// </summary>
+        /// <param name="c">char value</param>
+        /// <param name="bitLength">length in the bit  stream</param>
+        public void WriteChar(char c, int bitLength = 7)
         {
             var b = Convert.ToByte(c);
             var bin = Convert.ToString(b, 2);
-            AppendBinString(bin, 7);
+            AppendBinString(bin, bitLength);
         }
 
+        /// <summary>
+        /// wirte bool value to bit stream
+        /// </summary>
+        /// <param name="b">bool value</param>
+        /// <param name="bitLength">length int the bit stream</param>
+        public void WriteBool(bool b, int bitLength=1)
+        {
+            var bin = b ? "1" : "0";
+            AppendBinString(bin, bitLength);
+        }
+
+        /// <summary>
+        /// write binary string to bit stream
+        /// </summary>
+        /// <param name="bin">binary string</param>
+        public void WriteBinaryString(string bin)
+        {
+            BinString.Append(bin);
+        }
+
+        /// <summary>
+        /// get bytes in the writer stream, 8 bit align
+        /// </summary>
+        /// <returns></returns>
         public byte[] GetBytes()
         {
-            Check8();
-            var len = BinString.Length / 8;
+            var bin = GetBinString();
+            var len = bin.Length / 8;
             var result = new byte[len];
 
             for (int i = 0; i < len; i++)
             {
-                var bits = BinString.ToString(i * 8, 8);
+                var bits = bin.Substring(i * 8, 8);
                 result[i] = Convert.ToByte(bits, 2);
             }
 
             return result;
         }
 
+        /// <summary>
+        /// get binary string in the writer stream, 8 bit align
+        /// </summary>
+        /// <returns></returns>
         public string GetBinString()
         {
-            Check8();
-            return BinString.ToString();
+            var add = GetAdditionalBits();
+            return BinString.ToString() + add;
         }
-
 
         private void AppendBinString(string bin, int bitLength)
         {
@@ -74,13 +137,17 @@ namespace Ayx.BitIO
             BinString.Append(bin);
         }
 
-        private void Check8()
+        private string GetAdditionalBits()
         {
             var add = 8 - BinString.Length % 8;
+            if (add == 0) return string.Empty;
+
+            var result = new StringBuilder(add);
             for (int i = 0; i < add; i++)
             {
-                BinString.Append("0");
+                result.Append('0');
             }
+            return result.ToString();
         }
     }
 }

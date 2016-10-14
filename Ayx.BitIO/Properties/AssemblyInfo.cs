@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("Ayx.BitIO")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("This library is used to read and write bit based data")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Sky123.Org")]
+[assembly: AssemblyCompany("durow")]
 [assembly: AssemblyProduct("Ayx.BitIO")]
-[assembly: AssemblyCopyright("Copyright © Sky123.Org 2016")]
+[assembly: AssemblyCopyright("Copyright © durow 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
