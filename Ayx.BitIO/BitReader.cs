@@ -34,6 +34,15 @@ namespace Ayx.BitIO
             }
         }
 
+        //public static BitReader FromHex(string hexString)
+        //{
+
+        //}
+
+        public static BitReader FromASCII(string asciiString)
+        {
+            return new BitReader(Encoding.ASCII.GetBytes(asciiString));
+        }
         /// <summary>
         /// create a BitReader
         /// </summary>
