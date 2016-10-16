@@ -45,8 +45,8 @@ writer.WriteInt(25,6); //write 25 to 6bit, it is "011001"
 writer.WriteChar('A',7); //write character A to 7bit, it is "1000001"
 writer.WriteBool(true); //write true to 1 bit, it is "1"
 writer.WriteBinaryString("10010"); //write raw binary string
+//at this time,the data in writer is "0110011000001110010"
 ```
-
 After write some data,you can get the result you want
 ``` C#
 var rawBin = reader.BinString.ToString(); //get the binary string, result is:"0110011000001110010"
