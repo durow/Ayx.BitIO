@@ -34,15 +34,35 @@ namespace Ayx.BitIO
             }
         }
 
-        //public static BitReader FromHex(string hexString)
-        //{
-
-        //}
-
-        public static BitReader FromASCII(string asciiString)
+        /// <summary>
+        /// create a BitReader from hex string
+        /// </summary>
+        /// <param name="hexString">hex string</param>
+        /// <returns></returns>
+        public static BitReader FromHex(string hexString)
         {
-            return new BitReader(Encoding.ASCII.GetBytes(asciiString));
+            if (hexString.Length % 2 != 0)
+                throw new Exception("hexString length must be even number");
+            var len = hexString.Length / 2;
+            var result = new byte[len];
+            for (int i = 0; i < len; i++)
+            {
+                result[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+            }
+            return new BitReader(result);
         }
+
+        /// <summary>
+        /// create a BitReader from string with encoding
+        /// </summary>
+        /// <param name="str">string</param>
+        /// <param name="encoding">encoding</param>
+        /// <returns></returns>
+        public static BitReader FromString(string str, Encoding encoding)
+        {
+            return new BitReader(encoding.GetBytes(str));
+        }
+
         /// <summary>
         /// create a BitReader
         /// </summary>
@@ -57,6 +77,16 @@ namespace Ayx.BitIO
                 BinString.Append(ByteToBinString(data[i]));
             }
 
+            Position = 0;
+        }
+
+        /// <summary>
+        /// create a BitReader
+        /// </summary>
+        /// <param name="binaryString">binary string</param>
+        public BitReader(string binaryString)
+        {
+            BinString = new StringBuilder(binaryString);
             Position = 0;
         }
 
@@ -111,20 +141,20 @@ namespace Ayx.BitIO
         /// </summary>
         /// <param name="offset">offset</param>
         /// <returns></returns>
-        public bool ReadBool(int offset, int bitLength = 1)
+        public bool ReadBool(int offset)
         {
-            var result = ReadInt(offset, bitLength);
-            return offset != 0;
+            var result = ReadInt(offset, 1);
+            return result != 0;
         }
 
         /// <summary>
         /// read {bitLength} to bool from Position, and move Position with {bitLength}
         /// </summary>
         /// <returns></returns>
-        public bool ReadBool(int bitLength = 1)
+        public bool ReadBool()
         {
-            var result = ReadBool(Position, bitLength);
-            Position += bitLength;
+            var result = ReadBool(Position);
+            Position += 1;
             return result;
         }
 
@@ -157,7 +187,7 @@ namespace Ayx.BitIO
         /// <param name="offset">offset</param>
         /// <param name="bitLength">number of bit</param>
         /// <returns></returns>
-        public char ReadChar(int offset, int bitLength = 7)
+        public char ReadChar(int offset, int bitLength)
         {
             var b = ReadInt(offset, bitLength);
             return Convert.ToChar(b);
@@ -168,7 +198,7 @@ namespace Ayx.BitIO
         /// </summary>
         /// <param name="bitLength">number of bit</param>
         /// <returns></returns>
-        public char ReadChar(int bitLength = 7)
+        public char ReadChar(int bitLength)
         {
             var result = ReadChar(Position, bitLength);
             Position += bitLength;
@@ -192,6 +222,15 @@ namespace Ayx.BitIO
             }
 
             return result;
+        }
+
+        private void CheckBinaryString(string str)
+        {
+            foreach (var c in str)
+            {
+                if (c != '0' && c != '1')
+                    throw new Exception("binary string must be 0 or 1");
+            }
         }
     }
 }

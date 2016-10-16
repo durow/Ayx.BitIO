@@ -54,5 +54,38 @@ namespace Ayx.BitIO.Tests
             Assert.AreEqual(3, writer.Length);
             Assert.AreEqual("001", writer.BinString.ToString());
         }
+
+        [TestMethod()]
+        public void WriteBinaryStringTest()
+        {
+            var writer = new BitWriter();
+            writer.WriteBinaryString("10010");
+            writer.WriteBinaryString("00101");
+
+            Assert.AreEqual("1001000101", writer.BinString.ToString());
+        }
+
+        [TestMethod()]
+        public void GetBytesTest()
+        {
+            var writer = new BitWriter();
+            writer.WriteBinaryString("10010");
+            writer.WriteBinaryString("00101");
+            var test = writer.GetBytes();
+
+            Assert.AreEqual(145, test[0]);
+            Assert.AreEqual(64, test[1]);
+        }
+
+        [TestMethod()]
+        public void GetBinStringTest()
+        {
+            var writer = new BitWriter();
+            writer.WriteBinaryString("10010");
+            writer.WriteBinaryString("00101");
+            var test = writer.GetBinString();
+
+            Assert.AreEqual("1001000101000000", test);
+        }
     }
 }
