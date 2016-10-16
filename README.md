@@ -47,7 +47,7 @@ writer.WriteBool(true); //write true to 1 bit, it is "1"
 writer.WriteBinaryString("10010"); //write raw binary string
 ```
 
-After write some data,you can get them all
+After write some data,you can get the result you want
 ``` C#
 var rawBin = reader.BinString.ToString(); //get the binary string, result is:"0110011000001110010"
 var bin = reader.GetBinaryString(); //get binary string with 8bit align,result is:"011001100000111001000000"
